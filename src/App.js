@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 import Search from './components/Search'
 import TaskActions from './components/TaskActions'
@@ -8,6 +8,7 @@ import TaskEditModal from './components/TaskEditModal'
 const NEW_TASK = { title: '', description: '', status: 0 }
 
 const App = () => {
+  
   const [filter, setFilter] = useState(null)
   const [search, setSearch] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
@@ -22,6 +23,25 @@ const App = () => {
     .filter(([, { title, description}]) => searchRegex.test(title) || searchRegex.test(description))
     // apply filter
     .filter(([, { status }]) => !filter || ~~status === ~~filter)
+  
+  // dehydrate state from localStorage, only execute once
+  useEffect(() => {
+    const state = JSON.parse(localStorage.getItem('state'))
+    if (state) {
+      setFilter(state.filter)
+      setSearch(state.search)
+      setModalOpen(state.modalOpen)
+      setTasks(state.tasks)
+      setEditing(state.editing)
+    }
+  }, [])
+
+  // cache state to localStorage
+  useEffect(() => {
+    localStorage.setItem('state', JSON.stringify({
+      filter, search, modalOpen, tasks, editing,
+    }))
+  })
 
   const editTask = useCallback(id => {
     setEditing(id)
