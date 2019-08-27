@@ -2,8 +2,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import { STATUSES } from '../../constants'
 
-const TaskActions = ({ onTaskAdding }) => {
+const TaskActions = ({ filter, onTaskAdding, onFilterChange }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   return (
     <div className="task-actions d-flex justify-content-between align-items-center">
@@ -17,15 +18,25 @@ const TaskActions = ({ onTaskAdding }) => {
           <button 
             className="btn btn-outline-secondary dropdown-toggle" 
             type="button" 
-            onClick={() => setDropdownOpen(true)}
+            onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             <i className="fas fa-filter" />
           </button>
           <div className={classNames("dropdown-menu", dropdownOpen && 'show')} >
-            <li className="dropdown-item cursor-pointer">incoming</li>
-            <li className="dropdown-item cursor-pointer">progressing</li>
-            <li className="dropdown-item cursor-pointer">done</li>
-            <li className="dropdown-item cursor-pointer">pending</li>
+            {
+              STATUSES.map((status, index) => (
+                <li 
+                  key={index}
+                  className={classNames("dropdown-item cursor-pointer", filter === index && 'active')}
+                  onClick={() => onFilterChange(index)}
+                >
+                  { status.label }
+                </li>
+              ))
+            }
+            <li className="dropdown-item cursor-pointer" onClick={() => onFilterChange(null) }>
+              reset filter
+            </li>
           </div>
         </div>
       </div>
@@ -34,11 +45,15 @@ const TaskActions = ({ onTaskAdding }) => {
 }
 
 TaskActions.propTypes = {
-  onTaskAdding: PropTypes.func.isRequired
+  filter: PropTypes.number,
+  onTaskAdding: PropTypes.func,
+  onFilterChange: PropTypes.func,
 }
 
 TaskActions.defaultProps = {
-  onTaskAdding: () => null
+  filter: null,
+  onTaskAdding: () => null,
+  onFilterChange: () => null,
 }
 
 export default TaskActions

@@ -2,6 +2,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
+import { STATUSES } from '../../constants'
 
 const TaskEditModal = ({ task, open, setOpen, onUpdate, onSave }) => (
   <div 
@@ -22,14 +23,20 @@ const TaskEditModal = ({ task, open, setOpen, onUpdate, onSave }) => (
         </div>
         <div className="modal-body">
           <label >Title</label>
-          <input type="text" className="form-control" value={task.title} onChange={onUpdate('title')} />
+          <input type="text" className="form-control" value={task.title || ''} onChange={onUpdate('title')} />
           <label >Description</label>
           <textarea 
             className="form-control" 
             cols="10" rows="5" 
-            value={task.description} 
+            value={task.description || ''} 
             onChange={onUpdate('description')} 
           />
+          <label >Status</label>
+          <select className='form-control' value={task.status } onChange={onUpdate('status')}>
+            {
+              STATUSES.map((status, id) => <option key={id} value={id}>{status.label}</option>)
+            }
+          </select>
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={() => setOpen(false)}>
