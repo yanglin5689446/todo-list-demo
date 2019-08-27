@@ -38,5 +38,5 @@
       "pre-commit": "yarn lint"
     }
   },
-  "homepage": "https://github.com/yanglin5689446/todo-list-demo"
+  "homepage": "https://yanglin5689446.github.io/todo-list-demo"
 }
